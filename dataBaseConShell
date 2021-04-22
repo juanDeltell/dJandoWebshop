@@ -1,0 +1,29 @@
+from django.contrib.auth.models import User
+from webshop.models import Item, Category
+
+category_1 = Category(name = 'Phone', description ='here comes all the phones selling on this site', photo ='category_pics/categoryPhonePhoto.jpg')
+category_2 = Category(name = 'Car', description ='here comes all the cars selling on this site', photo ='category_pics/categoryCarPhoto.jpg')
+category_3 = Category(name = 'Lamps', description ='here comes all the lamps selling on this site', photo ='category_pics/categoryLampPhoto.jpg')
+
+category_1.save()
+category_2.save()
+category_3.save()
+
+car = Category.objects.filter(name = 'Car').first()
+phone = Category.objects.filter(name = 'Phone').first()
+lamp = Category.objects.filter(name = 'Lamps').first()
+
+user_1 = User(username = 'juan')
+
+item_1 = Item(name = 'Iphone', description = 'This is a fckng iphone', photo = 'iphonePhoto.jpg', price = 699.99, quantity = 500, category = phone, author = user_1)
+item_2 = Item(name = 'Redmi', description = 'chineese phone good quality low price', photo = 'redmiPhoto.jpg', price = 249.99, quantity = 50, category = phone, author = user_1)
+item_3 = Item(name = 'Renault', description = 'This is a car renault brand', photo = 'renaultPhoto.jpg', price = 15699.9, quantity = 1, category = car, author = user_1)
+item_4 = Item(name = 'Toyota', description = 'This is a car of toyota', photo = 'toyota-logo.jpg', price = 43290.95, quantity = 3, category = car, author = user_1)
+
+item_1.save()
+item_2.save()
+item_3.save()
+item_4.save()
+
+
+Item.objects.all()[5]
