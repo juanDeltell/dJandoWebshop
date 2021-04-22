@@ -70,6 +70,9 @@ class Item(models.Model):
     def get_add_to_cart_url(self):
          return reverse('add_to_cart', kwargs={'pk': self.pk})
 
+    def get_remove_from_cart_url(self):
+         return reverse('remove_from_cart', kwargs={'pk': self.pk})
+
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
