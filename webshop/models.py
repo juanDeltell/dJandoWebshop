@@ -6,23 +6,7 @@ from django.urls import reverse
 from datetime import datetime
 from PIL import Image
 
-class Category(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField(max_length=100)
-    photo = models.ImageField(upload_to='category_pics', blank=True)
 
-    def __str__(self):
-        return self.name
-
-    def save(self):
-        super().save()
-        img = Image.open(self.photo.path)
-
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.photo.path)
-           
 CATEGORY_CHOISES = (
     ('P', 'Phone'),
     ('C', 'Car'),

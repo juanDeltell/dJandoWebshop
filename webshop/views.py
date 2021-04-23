@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Item, Category, Order, OrderItem
+from .models import Item, Order, OrderItem
 # Create your views here.
 
 
@@ -18,29 +18,10 @@ def home(request):
 	return render(request, 'webshop/home.html', context)
 
 
-class CategoryListView(ListView):
-		
-	model = Category
-	template_name = 'category_list.html' #app>/<model>_<viewtype>.html
-	context_object_name ='category'
-	paginate_by = 5
-
-	#def get_queryset(self):
-	#	category = self.kwargs.get('name') # get_object_or_404(Category, name=self.kwargs.get('name'))
-	#	return Category.objects.filter(name=category)   #.order_by('-created_at')
-
-
-class PostListView(ListView):
-	model = Item
-	template_name = 'webshop/home.html' #app>/<model>_<viewtype>.html
-	context_object_name = 'items'
-	# ordering = ['-created_at']
-	paginate_by = 5
-
 
 class PostCreateView(LoginRequiredMixin, CreateView):
 	model = Item
-	fields = ['name','price','category','quantity','description','photo','author']
+	fields = ['name','price','category','description','photo','author']
 	
 	def form_valid(self, form):
 		user = self.request.user
@@ -55,7 +36,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 	
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 	model = Item
-	fields = ['name','price','category','quantity','description','photo','author']
+	fields = ['name','price','category','description','photo','author']
 	
 
 	#def form_valid(self, form):
@@ -106,7 +87,7 @@ class HomeView(ListView):
 	template_name = 'webshop/home-page.html' #app>/<model>_<viewtype>.html
 	context_object_name = 'items'
 	# ordering = ['-created_at']
-	paginate_by = 5
+	paginate_by = 10
 
 class ItemDetailView(DetailView):
 	model = Item
