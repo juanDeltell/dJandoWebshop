@@ -8,7 +8,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Item, Order, OrderItem
+from .models import Item, Order, OrderItem, Address, Payment, Coupon, Refund
+from .forms import CheckoutForm, CouponForm
 # Create your views here.
 
 
@@ -268,6 +269,7 @@ class OrderSummaryView(LoginRequiredMixin, DetailView):
 			}
 
 			return render(self.request, 'webshop/order-summary.html', context)
+			#return redirect('webshop/order-summary/')
 
           
 		except ObjectDoesNotExist:
@@ -343,7 +345,7 @@ def remove_from_cart(request, pk):
 	
 
 @login_required
-def remove_single_from_cart(request, pk):
+def remove_single_item_from_cart(request, pk):
 	item = Item.objects.get(id = pk)
 	slug = item.slug
 	order_qs = Order.objects.filter(

@@ -52,13 +52,16 @@
         {% if object.coupon %}
         <tr>
             <td colspan="4"><b>Coupon</b></td>
-            <td><b>-${{ object.coupon.amount }}</b></td>
+            <td><b>-{{ object.coupon.amount }}€</b></td>
         </tr>
         {% endif %}
         {% if object.get_total %}
         <tr>
             <td colspan="4"><b>Order Total</b></td>
-            <td><b>${{ object.get_total }}</b></td>
+            <td><b>{{ object.get_total }}€</b> <span class="badge badge-primary">Total saving {{ object.get_total_saved }}€</span></td>
+           
+
+            
         </tr>
         <tr>
             <td colspan="5">
