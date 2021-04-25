@@ -9,14 +9,20 @@ from .views import (
     HomeView,
     add_to_cart,
     remove_from_cart,
+    OrderSummaryView,
+    CheckoutView,
+    remove_single_from_cart,
 )
 
 #app_name= 'webshop'
 
 urlpatterns = [
-    path('item_list/', HomeView.as_view(), name='item-list'),
+    path('item_list/', HomeView.as_view(), name='item_list'),
     path('add_to_cart/<int:pk>/',add_to_cart, name='add_to_cart'),
     path('remove_from_cart/<int:pk>/',remove_from_cart, name='remove_from_cart'),
+    path('remove_item_from_cart/<int:pk>/',remove_single_from_cart, name='remove_single_item_from_cart'),
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('order-summary/',OrderSummaryView.as_view(), name='order-summary'),
     path('item/<int:pk>/', ItemDetailView.as_view(), name='item-detail'),
     path('product/<int:pk>/', ItemDetailView.as_view(), name='product'),
     path('item/new/', PostCreateView.as_view(), name='item-create'),
