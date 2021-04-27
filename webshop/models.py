@@ -10,6 +10,7 @@ from django_countries.fields import CountryField
 
 
 CATEGORY_CHOISES = (
+    ('A', 'All'),
     ('P', 'Phone'),
     ('C', 'Car'),
     ('L', 'Lamp')
@@ -18,7 +19,8 @@ CATEGORY_CHOISES = (
 LABEL_CHOISES = (
     ('p', 'primary'),
     ('s', 'secondary'),
-    ('d', 'danger')
+    ('d', 'danger'),
+    ('D', 'default'),
 )
 
 ADDRESS_CHOICES = (
@@ -78,7 +80,10 @@ class OrderItem(models.Model):
         return self.quantity * self.item.price
 
     def get_total_discount_item_price(self):
-        return self.quantity * self.item.discount_price
+        if self.item.discount_price == 'null':
+            return 0
+        else:
+            return self.quantity * self.item.discount_price
 
     def get_amount_saved(self):
         return self.get_total_item_price() - self.get_total_discount_item_price()

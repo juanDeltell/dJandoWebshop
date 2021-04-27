@@ -8,10 +8,13 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Item, Order, OrderItem, Address, Payment, Coupon, Refund
+from .models import Item, Order, OrderItem, Address
 from .forms import CheckoutForm, CouponForm
-# Create your views here.
 
+
+def category_choises(request):
+	my_model = Model.objects.values('category_choises').distinct()
+	return render(request, 'webshop/item_list.html')
 
 
 def home(request):
@@ -50,10 +53,10 @@ class CheckoutView(DetailView):
             if billing_address_qs.exists():
                 context.update(
                     {'default_billing_address': billing_address_qs[0]})
-            return render(self.request, "checkout.html", context)
+            return render(self.request, "webshop/checkout.html", context)
         except ObjectDoesNotExist:
             messages.info(self.request, "You do not have an active order")
-            return redirect("core:checkout")
+            return redirect("checkout")
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -77,7 +80,7 @@ class CheckoutView(DetailView):
                     else:
                         messages.info(
                             self.request, "No default shipping address available")
-                        return redirect('core:checkout')
+                        return redirect('checkout')
                 else:
                     print("User is entering a new shipping address")
                     shipping_address1 = form.cleaned_data.get(
@@ -140,7 +143,7 @@ class CheckoutView(DetailView):
                     else:
                         messages.info(
                             self.request, "No default billing address available")
-                        return redirect('core:checkout')
+                        return redirect('checkout')
                 else:
                     print("User is entering a new billing address")
                     billing_address1 = form.cleaned_data.get(
@@ -178,16 +181,16 @@ class CheckoutView(DetailView):
                 payment_option = form.cleaned_data.get('payment_option')
 
                 if payment_option == 'S':
-                    return redirect('core:payment', payment_option='stripe')
+                    return redirect('payment', payment_option='stripe')
                 elif payment_option == 'P':
-                    return redirect('core:payment', payment_option='paypal')
+                    return redirect('payment', payment_option='paypal')
                 else:
                     messages.warning(
                         self.request, "Invalid payment option selected")
-                    return redirect('core:checkout')
+                    return redirect('checkout')
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
-            return redirect("core:order-summary")
+            return redirect("order-summary")
 
 class PostCreateView(LoginRequiredMixin, CreateView):
 	model = Item
@@ -238,27 +241,57 @@ def about(request):
 	return render(request, 'webshop/about.html', {'title': 'about'})
 
 
-##not in use right now
-def item_list(request):
+def HomeViewShortedByHighPrice(request):
+	
+	orderBy = 'HighPrice'
+	ordering = ['-price']
+	paginate_by = 10
 	items_list = Item.objects.all()
-	page = request.GET.get('page')
-	paginator = Paginator(items_list,5)
-	try:
-		items = paginator.page(page)
-	except PageNotAnInteger:
-		items = paginator.page(1)
-	except EmptyPage:
-		items = paginator.page(paginator.num_pages)
-	return render(request, 'webshop/item_list.html', {'page': page, 'items': items})
+	
+	return render(request, 'webshop/item_list.html', {'orderBy': orderBy, 'items': items_list})
 
 
 class HomeView(ListView):
 	model = Item
 	template_name = 'webshop/home-page.html' #app>/<model>_<viewtype>.html
+	orderBy = 'Default'
 	context_object_name = 'items'
-	# ordering = ['-created_at']
+	paginate_by = 10
+	
+
+class HomeViewShortedByHighPrice(ListView):
+	model = Item
+	template_name = 'webshop/home-page.html' #app>/<model>_<viewtype>.html
+	orderBy = 'HighPrice'
+	context_object_name = 'items'
+	ordering = ['-price']
 	paginate_by = 10
 
+
+class HomeViewShortedByLowPrice(ListView):
+	model = Item
+	template_name = 'webshop/home-page.html' #app>/<model>_<viewtype>.html
+	orderBy = 'LowPrice'
+	context_object_name = 'items'
+	ordering = ['price']
+	paginate_by = 10
+
+class HomeViewShortedByAName(ListView):
+	model = Item
+	template_name = 'webshop/home-page.html' #app>/<model>_<viewtype>.html
+	orderBy = 'AName'
+	context_object_name = 'items'
+	ordering = ['name']
+	paginate_by = 10
+
+class HomeViewShortedByZName(ListView):
+	model = Item
+	template_name = 'webshop/home-page.html' #app>/<model>_<viewtype>.html
+	orderBy = 'ZName'
+	context_object_name = 'items'
+	ordering = ['-name']
+	paginate_by = 10
+	
 
 class OrderSummaryView(LoginRequiredMixin, DetailView):
 	def get(self, *args,**kwargs):
@@ -367,7 +400,7 @@ def remove_single_item_from_cart(request, pk):
 			else:
 				order.items.remove(order_item)
 			
-			messages.info(request,"This item qquantity was updated.")
+			messages.info(request,"This item quantity was updated.")
 			return redirect('order-summary')
 		else:
 			messages.info(request,"This item was not in your cart.")

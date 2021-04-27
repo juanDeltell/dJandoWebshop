@@ -8,6 +8,10 @@ from .views import (
     PostDeleteView,
     ItemDetailView,
     HomeView,
+    HomeViewShortedByHighPrice,
+    HomeViewShortedByLowPrice,
+    HomeViewShortedByAName,
+    HomeViewShortedByZName,
     add_to_cart,
     remove_from_cart,
     OrderSummaryView,
@@ -19,6 +23,10 @@ from .views import (
 
 urlpatterns = [
     path('item_list/', HomeView.as_view(), name='item_list'),
+    path('HomeViewShortedByHighPrice/', HomeViewShortedByHighPrice.as_view(), name='HomeViewShortedByHighPrice'),
+    path('HomeViewShortedByLowPrice/', HomeViewShortedByLowPrice.as_view(), name='HomeViewShortedByLowPrice'),
+    path('HomeViewShortedByAName/', HomeViewShortedByAName.as_view(), name='HomeViewShortedByAName'),
+    path('HomeViewShortedByZName/', HomeViewShortedByZName.as_view(), name='HomeViewShortedByZName'),
     path('add_to_cart/<int:pk>/',add_to_cart, name='add_to_cart'),
     path('remove_from_cart/<int:pk>/',remove_from_cart, name='remove_from_cart'),
     path('remove_single_item_from_cart/<int:pk>/',remove_single_item_from_cart, name='remove_single_item_from_cart'),
