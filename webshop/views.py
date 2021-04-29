@@ -55,8 +55,8 @@ class CheckoutView(DetailView):
                     {'default_billing_address': billing_address_qs[0]})
             return render(self.request, "webshop/checkout.html", context)
         except ObjectDoesNotExist:
-            messages.info(self.request, "You do not have an active order")
-            return redirect("checkout")
+            messages.warning(self.request, "You do not have an active order")
+            return redirect("item_list")
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -190,7 +190,7 @@ class CheckoutView(DetailView):
                     return redirect('checkout')
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
-            return redirect("order-summary")
+            return redirect("item_list")
 
 class PostCreateView(LoginRequiredMixin, CreateView):
 	model = Item
@@ -307,7 +307,7 @@ class OrderSummaryView(LoginRequiredMixin, DetailView):
           
 		except ObjectDoesNotExist:
 			messages.warning(self.request,"You do not have an active order.")
-			return redirect('webshop/items_list/')
+			return redirect('item_list')
 	
 
 
